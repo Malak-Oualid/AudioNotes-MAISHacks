@@ -1,0 +1,27 @@
+*{ 
+    margin: 0;
+    padding: 0;
+    font-family: calibri;
+}
+#mainpage{
+    width: 100%;
+    height: 100vh;
+    background-color: pink;
+    background-image: url("images/patnais.jpg");
+    background-size:contain;
+    text-align: center;
+    text-justify: auto;
+    color: black;
+    font-size: 300%;
+    font-weight: 500;
+}
+#mainpage .button{
+    font-size: larger;
+    color: white;
+}
+.text p{
+    margin-top: 100px;
+}
+.whitebg{
+    padding: 3px;
+}
