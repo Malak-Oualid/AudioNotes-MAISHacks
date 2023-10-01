@@ -1,23 +1,18 @@
-from flask import Flask, render_template, request, jsonify
+#from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template
 import speech_recognition as sr
-
-app = Flask(__name__)
-
-@app.route('/')
-def index():
-    return render_template('index.html')
-
+from app import app
 @app.route('/recognize', methods=['POST'])
 def recognize_and_store_speech():
+    # Initialize the recognizer
+    recognizer = sr.Recognizer()
+
+    # Open the microphone and start listening for speech
+    with sr.Microphone() as source:
+        print("Listening... Say something:")
+        audio = recognizer.listen(source)
+
     try:
-        # Initialize the recognizer
-        recognizer = sr.Recognizer()
-
-        # Open the microphone and start listening for speech
-        with sr.Microphone() as source:
-            print("Listening... Say something:")
-            audio = recognizer.listen(source)
-
         # Use Google Web Speech API to recognize the audio
         text = recognizer.recognize_google(audio)
         print(f"You said: {text}")
@@ -27,11 +22,13 @@ def recognize_and_store_speech():
             file.write(text)
 
         print("Speech recognition results saved to 'speech_recognition_output.txt'")
-        return jsonify({'message': 'Speech recognition completed.'})
     except sr.UnknownValueError:
-        return jsonify({'error': 'Sorry, I could not understand what you said.'}), 400
+        print("Sorry, I could not understand what you said.")
     except sr.RequestError as e:
-        return jsonify({'error': f'Sorry, there was an error with the request: {str(e)}'}), 500
+        print(f"Sorry, there was an error with the request: {str(e)}")
+
 
 if __name__ == '__main__':
-    app.run(debug=True)
+
+    # app.run(debug=True)
+    recognize_and_store_speech()

@@ -4,6 +4,8 @@ import openai
 from io import BytesIO
 import subprocess
 import librosa
+import speech_recognition as sr
+
 import numpy as np
 import convert_voice_to_file as cvf
 
@@ -46,9 +48,6 @@ def upload_file():
     print(transcript)
     return transcript
 
-if __name__ == '__main__':
-    app.run(debug=True, port=8000)
-
 @app.route('/upload', methods=['POST'])
 def compare_audio_files(audio_file1, audio_file2):
     # Load audio files
@@ -73,12 +72,12 @@ def compare_audio_files(audio_file1, audio_file2):
     return difference_list
 
 
-# Paths to audio files for comparison
-audio_file1 = cvf.record_to_file()
-audio_file2 = "/Users/karineha/projet/flaskProject/static/Music/Laufey_-_Magnolia_Official_Audio.mp3"
-
-# Get the list of differences
-difference_list = compare_audio_files(audio_file1, audio_file2)
+# # Paths to audio files for comparison
+# audio_file1 = cvf.record_to_file()
+# audio_file2 = "/Users/karineha/projet/flaskProject/static/Music/Laufey_-_Magnolia_Official_Audio.mp3"
+#
+# # Get the list of differences
+# difference_list = compare_audio_files(audio_file1, audio_file2)
 
 
 # Print each difference on a separate line
@@ -96,7 +95,7 @@ def do():
     return str(average_difference)
 
 
-average_difference = do()
+# average_difference = do()
 def message_voice_accuracy(average_difference):
 
     print("Average Difference:", float(average_difference))
@@ -111,7 +110,31 @@ def message_voice_accuracy(average_difference):
     elif float(average_difference) < 5:
         print("Devoured the cover. The song is yours now.")
 
-message_voice_accuracy(average_difference)
+# message_voice_accuracy(average_difference)
 
+app.route('/recognize', methods=['POST'])
+def recognize_and_store_speech():
+    # Initialize the recognizer
+    recognizer = sr.Recognizer()
+
+    # Open the microphone and start listening for speech
+    with sr.Microphone() as source:
+        print("Listening... Say something:")
+        audio = recognizer.listen(source)
+
+    try:
+        # Use Google Web Speech API to recognize the audio
+        text = recognizer.recognize_google(audio)
+        print(f"You said: {text}")
+
+        # Store the recognized text in a file
+        with open("speech_recognition_output.txt", "w") as file:
+            file.write(text)
+
+        print("Speech recognition results saved to 'speech_recognition_output.txt'")
+    except sr.UnknownValueError:
+        print("Sorry, I could not understand what you said.")
+    except sr.RequestError as e:
+        print(f"Sorry, there was an error with the request: {str(e)}")
 if __name__ == '__main__':
     app.run(debug=True, port=8000)
