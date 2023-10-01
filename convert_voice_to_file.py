@@ -52,5 +52,3 @@ def record_to_file():
     # Print the file path
     print(f"File '{output_file}' created at: {file_path}")
     return file_path
-
-record_to_file()

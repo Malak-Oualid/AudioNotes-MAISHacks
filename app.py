@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 from flask import Flask, request, render_template
 from views import views
 import openai
@@ -8,24 +9,19 @@ import speech_recognition as sr
 
 import numpy as np
 import convert_voice_to_file as cvf
+=======
+>>>>>>> Stashed changes
 
 
-openai.api_key ="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"
+openai.api_key = "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"
 app = Flask(__name__)
-app.register_blueprint(views, url_prefix="/views")
+# app.register_blueprint(views, url_prefix="/views")
+
 
 @app.route('/')
 def index():
     return render_template('frontend.html')
 
-@app.route('/run_python_script', methods=['GET'])
-def run_python_script():
-    try:
-        import subprocess
-        result = subprocess.check_output(['python', 'convert_voice_to_file.py'], stderr=subprocess.STDOUT, text=True)
-        return result
-    except subprocess.CalledProcessError as e:
-        return str(e.output)
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
@@ -48,6 +44,14 @@ def upload_file():
     print(transcript)
     return transcript
 
+<<<<<<< Updated upstream
+=======
+
+if __name__ == '__main__':
+    app.run(debug=True, port=8000)
+
+
+>>>>>>> Stashed changes
 @app.route('/upload', methods=['POST'])
 def compare_audio_files(audio_file1, audio_file2):
     # Load audio files
@@ -95,9 +99,15 @@ def do():
     return str(average_difference)
 
 
+<<<<<<< Updated upstream
 # average_difference = do()
 def message_voice_accuracy(average_difference):
+=======
+average_difference = do()
+>>>>>>> Stashed changes
 
+
+def message_voice_accuracy(average_difference):
     print("Average Difference:", float(average_difference))
     if 50 < float(average_difference):
         print("This was not a cover. It was a creation of a whole other song")
@@ -105,12 +115,17 @@ def message_voice_accuracy(average_difference):
         print("I heard better cover of songs, not gonna lie.")
     elif 10 <= float(average_difference) < 20:
         print("You sang well. Keep going! or don't...")
-    elif 5 <=float(average_difference) < 10:
+    elif 5 <= float(average_difference) < 10:
         print("Wow! Okay vocalist.")
     elif float(average_difference) < 5:
         print("Devoured the cover. The song is yours now.")
 
+<<<<<<< Updated upstream
 # message_voice_accuracy(average_difference)
+=======
+
+message_voice_accuracy(average_difference)
+>>>>>>> Stashed changes
 
 app.route('/recognize', methods=['POST'])
 def recognize_and_store_speech():

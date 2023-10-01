@@ -1,8 +1,7 @@
 #from flask import Flask, render_template, request, jsonify
 from flask import Flask, render_template
 import speech_recognition as sr
-from app import app
-@app.route('/recognize', methods=['POST'])
+
 def recognize_and_store_speech():
     # Initialize the recognizer
     recognizer = sr.Recognizer()
@@ -10,7 +9,7 @@ def recognize_and_store_speech():
     # Open the microphone and start listening for speech
     with sr.Microphone() as source:
         print("Listening... Say something:")
-        audio = recognizer.listen(source)
+        audio = recognizer.listen(source, phrase_time_limit=5)
 
     try:
         # Use Google Web Speech API to recognize the audio
@@ -26,9 +25,5 @@ def recognize_and_store_speech():
         print("Sorry, I could not understand what you said.")
     except sr.RequestError as e:
         print(f"Sorry, there was an error with the request: {str(e)}")
+    return text
 
-
-if __name__ == '__main__':
-
-    # app.run(debug=True)
-    recognize_and_store_speech()
